@@ -51,7 +51,7 @@
         </el-card>
         <el-card style="margin-top: 20px">
           <template #header>
-            <div>flipped-aurora团队</div>
+            <div>{{ t('view.about.flippedAuroraTeam') }}</div>
           </template>
           <div>
             <el-row>
@@ -85,7 +85,7 @@
       <el-col :span="12">
         <el-card>
           <template #header>
-            <div>提交记录</div>
+            <div>{{ t('view.about.submitRecords') }}</div>
           </template>
           <div>
             <el-timeline>
@@ -115,6 +115,10 @@
   import { ref } from 'vue'
   import { Commits, Members } from '@/api/github'
   import { formatTimeToStr } from '@/utils/date'
+  import { useI18n } from 'vue-i18n' // added by mohamed hassan to support multilanguage
+
+  const { t } = useI18n() // added by mohamed hassan to support multilanguage
+
   const page = ref(0)
 
   defineOptions({

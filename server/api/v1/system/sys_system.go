@@ -22,11 +22,11 @@ type SystemApi struct{}
 func (s *SystemApi) GetSystemConfig(c *gin.Context) {
 	config, err := systemConfigService.GetSystemConfig()
 	if err != nil {
-		global.GVA_LOG.Error("获取失败!", zap.Error(err))
-		response.FailWithMessage("获取失败", c)
+		global.GVA_LOG.Error(global.Translate("general.getDataFail"), zap.Error(err))
+		response.FailWithMessage(global.Translate("general.getDataFailErr"), c)
 		return
 	}
-	response.OkWithDetailed(systemRes.SysConfigResponse{Config: config}, "获取成功", c)
+	response.OkWithDetailed(systemRes.SysConfigResponse{Config: config}, global.Translate("general.getDataSuccess"), c)
 }
 
 // SetSystemConfig
@@ -46,11 +46,11 @@ func (s *SystemApi) SetSystemConfig(c *gin.Context) {
 	}
 	err = systemConfigService.SetSystemConfig(sys)
 	if err != nil {
-		global.GVA_LOG.Error("设置失败!", zap.Error(err))
-		response.FailWithMessage("设置失败", c)
+		global.GVA_LOG.Error(global.Translate("general.setupFailErr"), zap.Error(err))
+		response.FailWithMessage(global.Translate("general.setupFail"), c)
 		return
 	}
-	response.OkWithMessage("设置成功", c)
+	response.OkWithMessage(global.Translate("general.setupSuccess"), c)
 }
 
 // ReloadSystem
@@ -63,11 +63,11 @@ func (s *SystemApi) SetSystemConfig(c *gin.Context) {
 func (s *SystemApi) ReloadSystem(c *gin.Context) {
 	err := utils.Reload()
 	if err != nil {
-		global.GVA_LOG.Error("重启系统失败!", zap.Error(err))
-		response.FailWithMessage("重启系统失败", c)
+		global.GVA_LOG.Error(global.Translate("sys_system.rebootFail"), zap.Error(err))
+		response.FailWithMessage(global.Translate("sys_system.rebootFailErr"), c)
 		return
 	}
-	response.OkWithMessage("重启系统成功", c)
+	response.OkWithMessage(global.Translate("sys_system.rebootSuccess"), c)
 }
 
 // GetServerInfo
@@ -80,9 +80,9 @@ func (s *SystemApi) ReloadSystem(c *gin.Context) {
 func (s *SystemApi) GetServerInfo(c *gin.Context) {
 	server, err := systemConfigService.GetServerInfo()
 	if err != nil {
-		global.GVA_LOG.Error("获取失败!", zap.Error(err))
-		response.FailWithMessage("获取失败", c)
+		global.GVA_LOG.Error(global.Translate("general.getDataFail"), zap.Error(err))
+		response.FailWithMessage(global.Translate("general.getDataFailErr"), c)
 		return
 	}
-	response.OkWithDetailed(gin.H{"server": server}, "获取成功", c)
+	response.OkWithDetailed(gin.H{"server": server}, global.Translate("general.getDataSuccess"), c)
 }

@@ -34,4 +34,7 @@ type Server struct {
 
 	// 跨域配置
 	Cors CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+
+	// added by mohamed hassan to support multi-language
+	Language Language `mapstructure:"language" json:"language" yaml:"language"`
 }

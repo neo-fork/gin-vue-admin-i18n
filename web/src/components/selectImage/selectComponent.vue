@@ -22,7 +22,7 @@
       v-if="model && !isVideoExt(model)"
       class="w-full h-full"
       :src="getUrl(model)"
-      alt="图片"
+      :alt="t('components.selectImage.selectComponent.image')"
     />
     <div
       v-if="model"
@@ -32,7 +32,7 @@
       <el-icon>
         <delete />
       </el-icon>
-      删除
+      {{ t('general.delete') }}
     </div>
     <div
       v-else
@@ -42,13 +42,16 @@
       <el-icon>
         <plus />
       </el-icon>
-      上传
+      {{ t('components.selectImage.selectComponent.upload') }}
     </div>
   </div>
 </template>
 <script setup>
   import { getUrl, isVideoExt } from '@/utils/image'
   import { Delete, Plus } from '@element-plus/icons-vue'
+  import { useI18n } from 'vue-i18n' // added by mohamed hassan to support multilanguage
+
+  const { t } = useI18n() // added by mohamed hassan to support multilanguage
 
   defineProps({
     model: {

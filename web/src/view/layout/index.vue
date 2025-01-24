@@ -61,6 +61,11 @@
   import { useUserStore } from '@/pinia/modules/user'
   import { useAppStore } from '@/pinia'
   import { storeToRefs } from 'pinia'
+
+  import { useI18n } from 'vue-i18n' // added by mohamed hassan to support multilanguage
+
+  const { t } = useI18n() // added by mohamed hassan to support multilanguage
+
   const appStore = useAppStore()
   const { config, isDark, device } = storeToRefs(appStore)
 

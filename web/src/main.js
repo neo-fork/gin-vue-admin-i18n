@@ -13,11 +13,19 @@ import run from '@/core/gin-vue-admin.js'
 import auth from '@/directive/auth'
 import { store } from '@/pinia'
 import App from './App.vue'
-// 消除警告
+import i18n from './i18n' // added by mohamed hassan to multilangauge
+//消除警告
 import 'default-passive-events'
 
 const app = createApp(App)
 app.config.productionTip = false
 
-app.use(run).use(ElementPlus).use(store).use(auth).use(router).mount('#app')
+app
+  .use(run)
+  .use(ElementPlus)
+  .use(store)
+  .use(auth)
+  .use(router)
+  .use(i18n)
+  .mount('#app')
 export default app

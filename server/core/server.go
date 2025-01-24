@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/initialize"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
@@ -38,18 +39,32 @@ func RunWindowsServer() {
 	global.GVA_LOG.Info("server run success on ", zap.String("address", address))
 
 	fmt.Printf(`
-	欢迎使用 gin-vue-admin
-	当前版本:v2.7.8
-	加群方式:微信号：shouzi_1994 QQ群：470239250
-	项目地址：https://github.com/flipped-aurora/gin-vue-admin
-	插件市场:https://plugin.gin-vue-admin.com
-	GVA讨论社区:https://support.qq.com/products/371961
-	默认自动化文档地址:http://127.0.0.1%s/swagger/index.html
-	默认前端文件运行地址:http://127.0.0.1:8080
-	--------------------------------------版权声明--------------------------------------
-	** 版权所有方：flipped-aurora开源团队 **
-	** 版权持有公司：北京翻转极光科技有限责任公司 **
-	** 剔除授权标识需购买商用授权：https://gin-vue-admin.com/empower/index.html **
-`, address)
+	%s gin-vue-admin
+	%s: v2.7.8
+	%s
+	%s: https://github.com/flipped-aurora/gin-vue-admin
+	%s: https://plugin.gin-vue-admin.com
+	%s: https://support.qq.com/products/371961
+	%s: http://127.0.0.1%s/swagger/index.html
+	%s: http://127.0.0.1:8080
+	%s
+	%s
+	%s
+	%s
+	`,
+		global.Translate("core.server.welcomeTo"),
+		global.Translate("core.server.currentVersion"),
+		global.Translate("core.server.joinGroup"),
+		global.Translate("core.server.website"),
+		global.Translate("core.server.pluginMarket"),
+		global.Translate("core.server.community"),
+		global.Translate("core.server.swagger"),
+		address,
+		global.Translate("core.server.frontend"),
+		global.Translate("core.server.copyright1"),
+		global.Translate("core.server.copyright2"),
+		global.Translate("core.server.copyright3"),
+		global.Translate("core.server.copyright4"),
+	)
 	global.GVA_LOG.Error(s.ListenAndServe().Error())
 }

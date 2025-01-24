@@ -1,10 +1,12 @@
 <template>
   <div class="break-point">
     <div class="gva-table-box">
-      <el-divider content-position="left">大文件上传</el-divider>
+      <el-divider content-position="left">{{
+        t('view.example.breakpoint.largeFileUpload')
+      }}</el-divider>
       <form id="fromCont" method="post">
         <div class="fileUpload" @click="inputChange">
-          选择文件
+          {{ t('view.example.breakpoint.selectFile') }}
           <input
             v-show="false"
             id="file"
@@ -20,9 +22,11 @@
         type="primary"
         class="uploadBtn"
         @click="getFile"
-        >上传文件</el-button
+        >{{ t('view.example.breakpoint.uploadFiles') }}</el-button
       >
-      <div class="el-upload__tip">请上传不超过5MB的文件</div>
+      <div class="el-upload__tip">
+        {{ t('view.example.breakpoint.uploadFilesNote') }}
+      </div>
       <div class="list">
         <transition name="list" tag="p">
           <div v-if="file" class="list-item">
@@ -40,9 +44,7 @@
           </div>
         </transition>
       </div>
-      <div class="tips">
-        此版本为先行体验功能测试版，样式美化和性能优化正在进行中，上传切片文件和合成的完整文件分别再QMPlusserver目录的breakpointDir文件夹和fileDir文件夹
-      </div>
+      <div class="tips">{{ t('view.example.breakpoint.breakpointNote') }}</div>
     </div>
   </div>
 </template>
@@ -57,6 +59,9 @@
   } from '@/api/breakpoint'
   import { ref, watch } from 'vue'
   import { ElMessage } from 'element-plus'
+  import { useI18n } from 'vue-i18n' // added by mohamed hassan to support multilanguage
+
+  const { t } = useI18n() // added by mohamed hassan to support multilanguage
 
   defineOptions({
     name: 'BreakPoint'
@@ -127,20 +132,20 @@
           })
         } else {
           waitUpLoad.value = [] // 秒传则没有需要上传的切片
-          ElMessage.success('文件已秒传')
+          ElMessage.success(t('view.example.breakpoint.fileTransferredSec'))
         }
         waitNum.value = waitUpLoad.value.length // 记录长度用于百分比展示
       }
     } else {
       limitFileSize.value = true
-      ElMessage('请上传小于5M文件')
+      ElMessage(t('view.example.breakpoint.uploadFileSizeNote'))
     }
   }
 
   const getFile = () => {
     // 确定按钮
     if (file.value === null) {
-      ElMessage('请先上传文件')
+      ElMessage(t('view.example.breakpoint.uploadFileFirst'))
       return
     }
     if (percentage.value === 100) {
@@ -198,7 +203,7 @@
           fileMd5: fileMd5.value,
           filePath: res.data.filePath
         }
-        ElMessage.success('上传成功')
+        ElMessage.success(t('view.example.breakpoint.uploadSuccessfully'))
         await removeChunk(params)
       }
     }

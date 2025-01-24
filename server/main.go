@@ -6,6 +6,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/initialize"
 	_ "go.uber.org/automaxprocs"
 	"go.uber.org/zap"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils/translate"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -28,16 +29,21 @@ import (
 // @name                        x-token
 // @BasePath                    /
 func main() {
-	global.GVA_VP = core.Viper() // 初始化Viper
+	global.GVA_VP = core.Viper() // Initializing viper
 	initialize.OtherInit()
-	global.GVA_LOG = core.Zap() // 初始化zap日志库
+	global.GVA_LOG = core.Zap() // Initializing the zap log library
 	zap.ReplaceGlobals(global.GVA_LOG)
-	global.GVA_DB = initialize.Gorm() // gorm连接数据库
+	global.GVA_DB = initialize.Gorm() // Conneting to database using gorm
 	initialize.Timer()
 	initialize.DBList()
+	// added by mohamed hassan to support multilanguage
+	global.GVA_TRANSLATOR = translate.Translator{} // create translator inestance  here
+	//global.GVA_TRANSLATOR.InitTranslator(global.GVA_CONFIG.Language.Language, global.GVA_CONFIG.Language.Dir)
+	global.GVA_TRANSLATOR.InitTranslatorEx(global.GVA_CONFIG.Language.Language, global.GVA_CONFIG.Language.DefaultLanguage, global.GVA_CONFIG.Language.Dir)
+	// end of adding
 	if global.GVA_DB != nil {
-		initialize.RegisterTables() // 初始化表
-		// 程序结束前关闭数据库链接
+		initialize.RegisterTables() // Initializing database tables
+		// defer close the database connection before the end of the program
 		db, _ := global.GVA_DB.DB()
 		defer db.Close()
 	}

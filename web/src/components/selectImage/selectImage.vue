@@ -23,8 +23,8 @@
       />
     </div>
 
-    <el-drawer v-model="drawer" title="媒体库" :size="appStore.drawerSize">
-      <warning-bar title="点击“文件名/备注”可以编辑文件名或者备注内容。" />
+    <el-drawer v-model="drawer" :title="t('components.selectImage.selectImage.mediaLibrary')" :size="appStore.drawerSize">
+      <warning-bar :title="t('components.selectImage.selectImage.editFileNote')" />
       <div class="gva-btn-list gap-2">
         <upload-common :image-common="imageCommon" @on-success="getImageList" />
         <upload-image
@@ -36,10 +36,10 @@
         <el-input
           v-model="search.keyword"
           class="keyword"
-          placeholder="请输入文件名或备注"
+          :placeholder="t('components.selectImage.selectImage.enterFileName')"
         />
         <el-button type="primary" icon="search" @click="getImageList">
-          查询
+          {{ t('eneral.search') }}
         </el-button>
       </div>
       <div class="flex flex-wrap gap-4">
@@ -70,7 +70,11 @@
                   @click="chooseImg(item.url)"
                 >
                   <source :src="getUrl(item.url) + '#t=1'" />
-                  您的浏览器不支持视频播放
+                  {{
+                    t(
+                      'components.selectImage.selectImage.browserNotSupportVideo'
+                    )
+                  }}
                 </video>
                 <div
                   v-else
@@ -125,6 +129,9 @@
   import { Picture as IconPicture } from '@element-plus/icons-vue'
   import selectComponent from '@/components/selectImage/selectComponent.vue'
   import { useAppStore } from "@/pinia";
+  import { useI18n } from 'vue-i18n' // added by mohamed hassan to support multilanguage
+
+  const { t } = useI18n() // added by mohamed hassan to support multilanguage
 
   const appStore = useAppStore()
 
@@ -168,20 +175,24 @@
   }
 
   const editFileNameFunc = async (row) => {
-    ElMessageBox.prompt('请输入文件名或者备注', '编辑', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputPattern: /\S/,
-      inputErrorMessage: '不能为空',
-      inputValue: row.name
-    })
+    ElMessageBox.prompt(
+      t('components.selectImage.selectImage.enterFileNameOrComment'),
+      t('general.edit'),
+      {
+        confirmButtonText: t('general.confirm'),
+        cancelButtonText: t('general.cancel'),
+        inputPattern: /\S/,
+        inputErrorMessage: t('general.cannotBeEmpty'),
+        inputValue: row.name
+      }
+    )
       .then(async ({ value }) => {
         row.name = value
         const res = await editFileName(row)
         if (res.code === 0) {
           ElMessage({
             type: 'success',
-            message: '编辑成功!'
+            message: t('general.editSuccess')
           })
           getImageList()
         }
@@ -189,7 +200,7 @@
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '取消修改'
+          message: t('general.cancelModification')
         })
       })
   }
@@ -228,7 +239,7 @@
       if (!typeSuccess) {
         ElMessage({
           type: 'error',
-          message: '当前类型不支持使用'
+          message: t('components.selectImage.selectImage.typeNotSupported')
         })
         return
       }
@@ -265,17 +276,21 @@
   }
 
   const deleteCheck = (item) => {
-    ElMessageBox.confirm('是否删除该文件', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
+    ElMessageBox.confirm(
+      t('components.selectImage.selectImage.delectFileConfirmation'),
+      t('general.hint'),
+      {
+        confirmButtonText: t('general.confirm'),
+        cancelButtonText: t('general.cancel'),
+        type: 'warning'
+      }
+    )
       .then(async () => {
         const res = await deleteFile(item)
         if (res.code === 0) {
           ElMessage({
             type: 'success',
-            message: '删除成功!'
+            message: t('general.delectSuccess')
           })
           getImageList()
         }
@@ -283,7 +298,7 @@
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '已取消删除'
+          message: t('general.undeleted')
         })
       })
   }

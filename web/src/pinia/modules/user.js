@@ -7,8 +7,9 @@ import { ref, computed } from 'vue'
 import { useRouterStore } from './router'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { useStorage } from '@vueuse/core'
-
 import { useAppStore } from '@/pinia'
+import cookie from 'js-cookie'
+import i18n from '@/i18n' // added by mohamed hassan to multi languages
 
 export const useUserStore = defineStore('user', () => {
   const appStore = useAppStore()
@@ -24,6 +25,9 @@ export const useUserStore = defineStore('user', () => {
   const xToken = useCookies('x-token')
   const currentToken = computed(() => token.value || xToken.value || '')
 
+  const language = useStorage('language', '')
+  const xLanguage = useCookies('language')
+  const currentLanguage = computed(() => language.value || xLanguage.value || 'en')
   const setUserInfo = (val) => {
     userInfo.value = val
     if (val.originSetting) {
@@ -36,6 +40,16 @@ export const useUserStore = defineStore('user', () => {
   const setToken = (val) => {
     token.value = val
     xToken.value = val
+  }
+
+  // added by mohame hassan to allow store selected language for multilanguage support.
+  const setLanguage = (val) => {
+    console.log('setLanguage called with value: ' + val)
+    language.value = val
+  }
+
+  const getLanguage = () => {
+    return language.value
   }
 
   const NeedInit = async () => {
@@ -62,13 +76,13 @@ export const useUserStore = defineStore('user', () => {
     try {
       loadingInstance.value = ElLoading.service({
         fullscreen: true,
-        text: '登录中，请稍候...'
+        text: i18n.global.t('pinia.modules.user.loggingIn')
       })
 
       const res = await login(loginInfo)
       
       if (res.code !== 0) {
-        ElMessage.error(res.message || '登录失败')
+        ElMessage.error(res.message || i18n.global.t('pinia.modules.user.loginFailed'))
         return false
       }
       // 登陆成功，设置用户信息和权限相关信息
@@ -129,11 +143,14 @@ export const useUserStore = defineStore('user', () => {
   return {
     userInfo,
     token: currentToken,
+    language: currentLanguage,
     NeedInit,
     ResetUserInfo,
     GetUserInfo,
     LoginIn,
     LoginOut,
+    setLanguage, // added by mohamed hassan to allow store selected language for multilingual support.
+    getLanguage, // added by mohamed hassan to allow store selected language for multilingual support.
     setToken,
     loadingInstance,
     ClearStorage
